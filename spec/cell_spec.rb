@@ -15,8 +15,10 @@ RSpec.describe Cell do
   it 'places the ship' do
     cruiser = Ship.new("Cruiser", 3)
     cell = Cell.new("B4")
+    
     cell.place_ship(cruiser)
 
     expect(cell.ship).to be(cruiser)
+    expect(cell.empty?).to be(false)
   end 
 end
