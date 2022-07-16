@@ -1,3 +1,5 @@
+
+require 'pry'
 class Board
   attr_reader :cells 
 
@@ -23,6 +25,8 @@ class Board
 
   def valid_placement?(ship, coordinates)
     return false if coordinates.count != ship.length
+    target_cells = coordinates.map { |coordinate| cells[coordinate] }
+    return false unless target_cells.all? { |cell| cell&.empty? }
     consecutive_number?(coordinates) ^ consecutive_letter?(coordinates)
   end
 
@@ -50,6 +54,12 @@ class Board
   def place(ship, coordinates)
     coordinates.each do |coordinate|
       @cells[coordinate].place_ship(ship)
+    end
+  end
+
+  def render(show_ships = false) 
+    @cells.map do |cell|
+      cell.to_s.render# binding.pry
     end
   end
 
