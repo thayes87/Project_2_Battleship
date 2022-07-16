@@ -41,7 +41,7 @@ RSpec.describe Board do
     # Vertical happy path
     expect(board.valid_placement?(cruiser, ["A1", "B1", "C1"])).to be true
     # High number happy path
-    expect(board.valid_placement?(cruiser, ["A11", "A12", "A13"])).to be true
+    expect(board.valid_placement?(cruiser, ["A11", "A12", "A13"])).to be false
     # Coordinates overlapping
     expect(board.valid_placement?(submarine, ["A1", "A1"])).to be false
     # Ship is too small
@@ -60,6 +60,33 @@ RSpec.describe Board do
     expect(board.valid_placement?(cruiser, ["A1", "B2", "C3"])).to be false
   end
 
+  it 'can place ship on the board' do
+    board.place(cruiser, ["A1", "A2", "A3"])
+    cell_1 = board.cells["A1"] 
+    cell_2 = board.cells["A2"]
+    cell_3 = board.cells["A3"]  
+    cell_1.ship
+    cell_2.ship
+    cell_3.ship
+
+    expect(cell_3.ship == cell_2.ship).to be true 
+  end
   
+  it 'will not allow overlapping ships' do
+    board.place(cruiser, ["A1", "A2", "A3"])
+
+    expect(board.valid_placement?(submarine, ["A1", "B1"])).to be false
+  end
+
+  it 'can render the board' do 
+    board.place(cruiser, ["A1", "A2", "A3"]) 
+    board.render
+
+    expect(board.render).to be("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+
+    board.render(true)
+    
+    expect(board.render(true)).to be ("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
+  end
 
 end
