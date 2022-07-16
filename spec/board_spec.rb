@@ -36,16 +36,27 @@ RSpec.describe Board do
   end
   
   it 'validates ship placement' do
+    # Horizontal happy path
     expect(board.valid_placement?(cruiser, ["A1", "A2", "A3"])).to be true
-
+    # Vertical happy path
+    expect(board.valid_placement?(cruiser, ["A1", "B1", "C1"])).to be true
+    # High number happy path
+    expect(board.valid_placement?(cruiser, ["A11", "A12", "A13"])).to be true
+    # Coordinates overlapping
+    expect(board.valid_placement?(submarine, ["A1", "A1"])).to be false
+    # Ship is too small
     expect(board.valid_placement?(cruiser, ["A1", "A2"])).to be false
+    # Ship is too big
     expect(board.valid_placement?(submarine, ["A2", "A3", "A4"])).to be false
+    # Non-consecutive
     expect(board.valid_placement?(cruiser, ["A1", "A2", "A4"])).to be false
     expect(board.valid_placement?(submarine, ["A1", "C1"])).to be false
+    # Backwards
     expect(board.valid_placement?(cruiser, ["A3", "A2", "A1"])).to be false
     expect(board.valid_placement?(submarine, ["C1", "B1"])).to be false
+    # L-shaped consecutive
     expect(board.valid_placement?(cruiser, ["A1", "A2", "B2"])).to be false
+    # Diagonal
+    expect(board.valid_placement?(cruiser, ["A1", "B2", "C3"])).to be false
   end
-
-  
 end

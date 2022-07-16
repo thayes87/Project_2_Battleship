@@ -23,29 +23,28 @@ class Board
 
   def valid_placement?(ship, coordinates)
     return false if coordinates.count != ship.length
-    consecutive_number?(coordinates)
+    consecutive_number?(coordinates) ^ consecutive_letter?(coordinates)
   end
 
   def consecutive_number?(coordinates)
-    pp coordinate_hash(coordinates)
-    coordinate_hash(coordinates)[:number].each_cons(2).all? do |num_1, num_2|
-      num_1.to_i == num_2.to_i - 1
+    coordinate_hash(coordinates)[:numbers].each_cons(2).all? do |num_1, num_2|
+      num_1.ord == num_2.ord - 1
+    end
+  end
+
+  def consecutive_letter?(coordinates)
+    coordinate_hash(coordinates)[:letters].each_cons(2).all? do |letter_1, letter_2|
+      letter_1.ord == letter_2.ord - 1
     end
   end
 
   def coordinate_hash(coordinates)
-    hash = Hash.new { |k,v| k[v] = [] }
+    hash = { letters: [], numbers: [] }
     coordinates.each do |coord|
-      hash[:letter] << coord[0]
-      hash[:number] << coord[1]
+      hash[:letters] << coord[0]
+      hash[:numbers] << coord[1..].to_i
     end
     hash
-  end
-
-  def consecutive_letter?
-    coordinate_hash(coordinates)[:letter].each_cons(2).all? do |letter_1, letter_2|
-      letter_1.ord == letter_2.ord - 1
-    end
   end
 end
  
