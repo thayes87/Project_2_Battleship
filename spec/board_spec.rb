@@ -59,4 +59,7 @@ RSpec.describe Board do
     # Diagonal
     expect(board.valid_placement?(cruiser, ["A1", "B2", "C3"])).to be false
   end
+
+  
+
 end
