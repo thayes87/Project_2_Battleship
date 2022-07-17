@@ -99,4 +99,23 @@ RSpec.describe Board do
       "D . . . . \n"
     )
   end
+
+  describe '#random_placement(ship)' do
+    it 'returns coordinates the same length as the ship' do 
+      expect(board.random_placement(cruiser).length).to eq(cruiser.length)
+    end
+
+    it 'can place a ship horizontally' do
+      random_coords = board.random_placement(cruiser, [:horizontal])
+      expect(random_coords).to all be_start_with random_coords[0][0]
+      expect(board.valid_placement?(cruiser, random_coords)).to be true
+    end
+
+    it 'can place a ship vertically' do
+      random_coords = board.random_placement(cruiser, [:vertical])
+      expect(random_coords).to all be_end_with random_coords[0][1..]
+      expect(board.valid_placement?(cruiser, random_coords)).to be true
+    end
+  end
+
 end
