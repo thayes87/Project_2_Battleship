@@ -57,10 +57,24 @@ class Board
     end
   end
 
-  def render(show_ships = false) 
-    @cells.map do |cell|
-      cell.to_s.render# binding.pry
+  def render(show_ships = false)
+    output = '  '
+    
+    coordinate_hash(@cells.keys)[:numbers].uniq.each do |n|
+      output << "#{n} "
     end
+    output << "\n"
+
+    coordinate_hash(@cells.keys)[:letters].uniq.each do |l|
+      output << "#{l}"
+      @cells.each do |coord, cell|
+        if cell.coordinate.include?(l) 
+          output << " #{cell.render(show_ships)}"
+        end
+      end
+      output << " \n"
+    end
+    output
   end
 
 end

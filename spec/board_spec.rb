@@ -10,9 +10,8 @@ RSpec.describe Board do
   it 'exists' do
     board.cells
 
-  expect(board).to be_instance_of(Board)
-  # require 'pry'; binding.pry
-  expect(board.cells.is_a?(Hash)).to be true
+    expect(board).to be_instance_of(Board)
+    expect(board.cells.is_a?(Hash)).to be true
   end
 
   it 'generates all coordinates' do
@@ -31,8 +30,7 @@ RSpec.describe Board do
     expect(board.valid_coordinate?("D4")).to be true
     expect(board.valid_coordinate?("A5")).to be false
     expect(board.valid_coordinate?("E1")).to be false
-    expect(board.valid_coordinate?("A22")).to be false
-    
+    expect(board.valid_coordinate?("A22")).to be false 
   end
   
   it 'validates ship placement' do
@@ -82,11 +80,23 @@ RSpec.describe Board do
     board.place(cruiser, ["A1", "A2", "A3"]) 
     board.render
 
-    expect(board.render).to be("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+    # expect(board.render).to be("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+    expect(board.render).to eq(
+      "  1 2 3 4 \n" +
+      "A . . . . \n" +
+      "B . . . . \n" +
+      "C . . . . \n" +
+      "D . . . . \n"
+    )
 
     board.render(true)
     
-    expect(board.render(true)).to be ("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
+    expect(board.render(true)).to eq(
+      "  1 2 3 4 \n" +
+      "A S S S . \n" +
+      "B . . . . \n" +
+      "C . . . . \n" +
+      "D . . . . \n"
+    )
   end
-
 end
