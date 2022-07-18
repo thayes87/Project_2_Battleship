@@ -1,5 +1,6 @@
 
 require 'pry'
+require './lib/cell'
 class Board
   attr_reader :cells 
 
@@ -55,6 +56,20 @@ class Board
     coordinates.each do |coordinate|
       @cells[coordinate].place_ship(ship)
     end
+  end
+
+  def random_placement(ship, directions=[:horizontal, :vertical])
+    possible_coordinates = []
+    until valid_placement?(ship, possible_coordinates) do
+      starting_coordinate = rand(cells.keys.count)
+      direction = directions.sample
+      domain = cells.keys
+      if direction == :vertical
+        domain = cells.keys.sort_by { |k| k[1..].to_i }
+      end
+      possible_coordinates = domain.slice(starting_coordinate, ship.length) 
+    end
+    possible_coordinates 
   end
 
   def render(show_ships = false)
