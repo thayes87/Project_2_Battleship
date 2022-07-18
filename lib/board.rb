@@ -58,6 +58,10 @@ class Board
     end
   end
 
+  def place_randomly(ship)
+    place(ship, random_placement(ship))
+  end
+  
   def random_placement(ship, directions=[:horizontal, :vertical])
     possible_coordinates = []
     until valid_placement?(ship, possible_coordinates) do
