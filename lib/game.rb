@@ -81,11 +81,16 @@ class Game
     puts "\n==============PLAYER BOARD==============\n"
     puts user_board.render(true)
         
-    input = request_user_coordinate
-    
-    until computer_board.valid_coordinate?(input)
-      puts "Oops that is not a valid coordinate. Try again."
+    input = ""
+    loop do
       input = request_user_coordinate
+      if !computer_board.valid_coordinate?(input)
+        puts "Oops that is not a valid coordinate. Try again."
+      elsif computer_board.cells[input].fired_upon?
+        puts "Awww fiddlesticks, you already fired on that one. Try again."
+      else
+        break
+      end
     end
 
     # if computer_board.cells[input].fired_upon?
