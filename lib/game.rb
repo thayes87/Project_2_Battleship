@@ -76,7 +76,6 @@ class Game
   end
 
   def take_turn
-    puts "\nNOW IT'S TIME TO PLAY!!!\n"
     puts "\n=============COMPUTER BOARD=============\n"
     puts computer_board.render
     puts "\n==============PLAYER BOARD==============\n"
@@ -89,11 +88,15 @@ class Game
       input = request_user_coordinate
     end
 
-    computer_board.cells[input].fire_upon
+    # if computer_board.cells[input].fired_upon?
+    computer_board.cells[input].fire_upon 
+    # else input = request_user_coordinate
+    # end
+
     computer_cell = computer_board.cells[input]
     user_cell = computer_shot
     find_results(user_cell, computer_cell)
-    game_over?
+    take_turn 
   end
 
   def request_user_coordinate
@@ -102,23 +105,26 @@ class Game
   end
 
   def computer_shot
-     random_coord = user_board.cells.keys.sample
-    unless user_board.cells[random_coord].fired_upon? 
-      user_board.cells[random_coord].fire_upon
-      user_board.cells[random_coord]
-    end
+    random_cell = user_board.cells.reject{|coord, cell| cell.fired_upon? }.values.sample
+    random_cell.fire_upon
+    random_cell
   end
 
   def find_results(user_cell, computer_cell)
     if computer_cell.render == "H"
       puts "Your shot on #{computer_cell.coordinate} was a hit!"
     elsif computer_cell.render == "M"
-       puts "Your shot on #{computer_cell.coordinate} was a miss!"
+      puts "Your shot on #{computer_cell.coordinate} was a miss!"
+    end
+    if user_cell.render == "H"
+      puts "My shot on #{user_cell.coordinate} was a hit!"
+    elsif user_cell.render == "M"
+      puts "My shot on #{user_cell.coordinate} was a miss!"
     end
   end
 
   def game_over?
-
+    
   end
   # puts "\n=============COMPUTER BOARD=============\n"
   # puts computer_board.render 

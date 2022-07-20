@@ -24,16 +24,11 @@ class Cell
   end
   
   def render(show_ships = false)
-    return render_reveal if show_ships
-    return "." unless fired_upon?
-    return "M" if empty?  
-    
-    ship.sunk? ? "X" : "H"
-  end
+    return "X" if ship&.sunk?
+    return "H" if ship && fired_upon?
+    return "M" if !ship && fired_upon?
+    return "S" if ship && show_ships
 
-  private
-  
-  def render_reveal
-    empty? ? "." : "S"
+    "."
   end
 end
