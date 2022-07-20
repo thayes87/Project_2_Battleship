@@ -2,39 +2,43 @@ require './lib/board'
 require './lib/ship'
 require 'pry'
 
-class Game 
-  attr_reader :user_board, :computer_board 
+class Game
+  attr_reader :user_board, :computer_board
 
   def initialize
     @user_board = Board.new
     @computer_board = Board.new
   end
-  
+
   def run
+    loop { run_round }
+  end
+
+  def run_round
     main_menu
 
     computer_place_ships([
-      Ship.new("Cruiser", 3), 
-      Ship.new("Submarine", 2) 
+      Ship.new("Cruiser", 3),
+      Ship.new("Submarine", 2)
     ])
 
     user_place_ships([
       Ship.new("Cruiser", 3),
-      Ship.new("Submarine", 2) 
+      Ship.new("Submarine", 2)
     ])
 
-    take_turn 
+    take_turn until game_over?
   end
-  
+
   def main_menu
     puts "\nWelcome to BATTLESHIP\n"
-    puts "\nEnter p to play. Enter q to quit.\n" 
+    puts "\nEnter p to play. Enter q to quit.\n"
     user_input = gets.chomp
-    if user_input != "p" 
+    if user_input != "p"
       exit
     end
   end
-  
+
   def computer_place_ships(ships)
     ships.each do |ship|
       computer_board.place_randomly(ship)
@@ -56,13 +60,13 @@ class Game
 
       # 2. Split the user input into an array of strings, each containing a coordinate
       user_coords = user_input.upcase.split(', ') # => ["A1", "A2", "A3"]
-      
+
       # 3. Validate that each user coordinate is in fact a valid coordinate
       if !user_coords.all? { |coordinate| user_board.valid_coordinate?(coordinate) }
         puts "\nOops those are not valid coordinates. Please try again.\n"
-        redo 
+        redo
       end
-      
+
       # 4. Validate that the user coordinate array is a valid placement for a crusier
       if !user_board.valid_placement?(ship, user_coords)
         puts "\nOops that is not a valid placement. Please try again.\n"
@@ -84,7 +88,6 @@ class Game
     computer_cell = player_shot
     user_cell = computer_shot
     find_results(user_cell, computer_cell)
-    take_turn unless game_over?
   end
 
   def player_shot
@@ -135,13 +138,13 @@ class Game
     user_ship_cells = user_board.cells.values.select { |cell| cell if cell.ship }
     user_ships_sunk = user_ship_cells.all? { |cell| cell.ship.sunk? }
 
-    if computer_ships_sunk 
+    if computer_ships_sunk
       puts "You Won!"
       true
     elsif user_ships_sunk
       puts "I Won!"
-      true 
-    else 
+      true
+    else
       false
     end
   end

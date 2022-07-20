@@ -49,9 +49,6 @@ RSpec.describe Game do
       "A1",         # fire on A1
     )
 
-    # end the game after one turn to avoid infinite loops
-    allow(game).to receive(:game_over?).and_return(true)
-
     game.computer_place_ships([
       Ship.new("cruiser", 3),
       Ship.new("submarine", 2)
@@ -73,8 +70,6 @@ RSpec.describe Game do
     )
     # simulate the user shooting to avoid actually prompting for input
     allow(game).to receive(:player_shot).and_return(game.computer_board.cells.values.first)
-    # end the game after one turn to avoid infinite loops
-    allow(game).to receive(:game_over?).and_return(true)
 
     game.computer_place_ships([
       Ship.new("cruiser", 3),
@@ -89,7 +84,7 @@ RSpec.describe Game do
     expect(game.user_board.cells.values.count{|c| !c.fired_upon? }).to eq(15)
   end
 
-  it 'plays a game until completion' do
+  it 'plays a game until the user wins' do
     allow(game).to receive(:gets).and_return(
       "p", # press "p" to play
 
@@ -99,12 +94,31 @@ RSpec.describe Game do
       # fire on every cell sequentially
       *game.computer_board.cells.keys,
     )
+
+    # disable the computer's ability to take shots
     allow(game).to receive(:computer_shot).and_return(game.user_board.cells.values.first)
 
-    game.run
+    game.run_round
 
     expect(game).to have_received(:puts).with("You Won!")
   end
+
+  it 'plays a game until the computer wins' do
+    allow(game).to receive(:gets).and_return(
+      "p", # press "p" to play
+
+      "A1, B1, C1", # place the cruiser
+      "A2, B2",     # place the submarine
+
+      # fire on every cell sequentially
+      *game.computer_board.cells.keys,
+    )
+
+    # disable the player's ability to take shots
+    allow(game).to receive(:player_shot).and_return(game.user_board.cells.values.first)
+
+    game.run_round
+
+    expect(game).to have_received(:puts).with("I Won!")
+  end
 end
-
-
