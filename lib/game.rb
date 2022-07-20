@@ -1,6 +1,5 @@
 require './lib/board'
 require './lib/ship'
-require 'pry'
 
 class Game
   attr_reader :user_board, :computer_board
