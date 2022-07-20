@@ -2,7 +2,7 @@
 require 'pry'
 require './lib/cell'
 class Board
-  attr_reader :cells 
+  attr_reader :cells
 
   def initialize
     @cells = {}
@@ -61,7 +61,7 @@ class Board
   def place_randomly(ship)
     place(ship, random_placement(ship))
   end
-  
+
   def random_placement(ship, directions=[:horizontal, :vertical])
     possible_coordinates = []
     until valid_placement?(ship, possible_coordinates) do
@@ -78,7 +78,7 @@ class Board
 
   def render(show_ships = false)
     output = '  '
-    
+
     coordinate_hash(@cells.keys)[:numbers].uniq.each do |n|
       output << "#{n} "
     end
@@ -87,7 +87,7 @@ class Board
     coordinate_hash(@cells.keys)[:letters].uniq.each do |l|
       output << "#{l}"
       @cells.each do |coord, cell|
-        if cell.coordinate.include?(l) 
+        if cell.coordinate.include?(l)
           output << " #{cell.render(show_ships)}"
         end
       end
