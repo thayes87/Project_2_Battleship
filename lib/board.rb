@@ -1,8 +1,7 @@
-
-require 'pry'
 require './lib/cell'
+
 class Board
-  attr_reader :cells 
+  attr_reader :cells
 
   def initialize
     @cells = {}
@@ -17,27 +16,27 @@ class Board
 
   def valid_coordinate?(coordinate)
     location = cells[coordinate]
-     if location && location.coordinate == coordinate
-      true
-    else 
-      false
-    end
+    location&.coordinate == coordinate
   end
 
   def valid_placement?(ship, coordinates)
     return false if coordinates.count != ship.length
     target_cells = coordinates.map { |coordinate| cells[coordinate] }
-    return false unless target_cells.all? { |cell| cell&.empty? }
+    return false if target_cells.any?(&:nil?)
+    return false unless target_cells.all?(&:empty?)
+    
     consecutive_number?(coordinates) ^ consecutive_letter?(coordinates)
   end
 
   def consecutive_number?(coordinates)
+    return false if coordinate_hash(coordinates)[:letters].uniq.count > 1
     coordinate_hash(coordinates)[:numbers].each_cons(2).all? do |num_1, num_2|
       num_1.ord == num_2.ord - 1
     end
   end
 
   def consecutive_letter?(coordinates)
+    return false if coordinate_hash(coordinates)[:numbers].uniq.count > 1
     coordinate_hash(coordinates)[:letters].each_cons(2).all? do |letter_1, letter_2|
       letter_1.ord == letter_2.ord - 1
     end
@@ -58,23 +57,27 @@ class Board
     end
   end
 
+  def place_randomly(ship)
+    place(ship, random_placement(ship))
+  end
+
   def random_placement(ship, directions=[:horizontal, :vertical])
     possible_coordinates = []
     until valid_placement?(ship, possible_coordinates) do
-      starting_coordinate = rand(cells.keys.count)
-      direction = directions.sample
       domain = cells.keys
+      starting_coordinate = rand(domain.count)
+      direction = directions.sample
       if direction == :vertical
-        domain = cells.keys.sort_by { |k| k[1..].to_i }
+        domain = domain.group_by{|k| k[1..] }.values.flatten
       end
-      possible_coordinates = domain.slice(starting_coordinate, ship.length) 
+      possible_coordinates = domain.slice(starting_coordinate, ship.length)
     end
-    possible_coordinates 
+    possible_coordinates
   end
 
   def render(show_ships = false)
     output = '  '
-    
+
     coordinate_hash(@cells.keys)[:numbers].uniq.each do |n|
       output << "#{n} "
     end
@@ -83,7 +86,7 @@ class Board
     coordinate_hash(@cells.keys)[:letters].uniq.each do |l|
       output << "#{l}"
       @cells.each do |coord, cell|
-        if cell.coordinate.include?(l) 
+        if cell.coordinate.include?(l)
           output << " #{cell.render(show_ships)}"
         end
       end
@@ -93,4 +96,3 @@ class Board
   end
 
 end
- 

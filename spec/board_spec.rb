@@ -56,6 +56,10 @@ RSpec.describe Board do
     expect(board.valid_placement?(cruiser, ["A1", "A2", "B2"])).to be false
     # Diagonal
     expect(board.valid_placement?(cruiser, ["A1", "B2", "C3"])).to be false
+    # Horizontal wraparounds
+    expect(board.valid_placement?(submarine, ["A4", "B1"])).to be false
+    # Vertical wraparounds
+    expect(board.valid_placement?(submarine, ["D2", "A3"])).to be false
   end
 
   it 'can place ship on the board' do
@@ -117,5 +121,4 @@ RSpec.describe Board do
       expect(board.valid_placement?(cruiser, random_coords)).to be true
     end
   end
-
 end
