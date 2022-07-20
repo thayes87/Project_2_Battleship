@@ -101,7 +101,7 @@ class Game
     computer_cell = computer_board.cells[input]
     user_cell = computer_shot
     find_results(user_cell, computer_cell)
-    take_turn 
+    take_turn unless game_over?
   end
 
   def request_user_coordinate
@@ -129,8 +129,20 @@ class Game
   end
 
   def game_over?
-    
+    computer_ship_cells = computer_board.cells.values.select { |cell| cell if cell.ship }
+    computer_ships_sunk = computer_ship_cells.all? { |cell| cell.ship.sunk? }
+
+    user_ship_cells = user_board.cells.values.select { |cell| cell if cell.ship }
+    user_ships_sunk = user_ship_cells.all? { |cell| cell.ship.sunk? }
+
+    if computer_ships_sunk 
+      puts "You Won!"
+      true
+    elsif user_ships_sunk
+      puts "I Won!"
+      true 
+    else 
+      false
+    end
   end
-  # puts "\n=============COMPUTER BOARD=============\n"
-  # puts computer_board.render 
 end
