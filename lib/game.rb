@@ -22,6 +22,8 @@ class Game
       Ship.new("Cruiser", 3),
       Ship.new("Submarine", 2) 
     ])
+
+    take_turn 
   end
   
   def main_menu
@@ -72,4 +74,51 @@ class Game
       puts @user_board.render(true)
     end
   end
+
+  def take_turn
+    puts "\nNOW IT'S TIME TO PLAY!!!\n"
+    puts "\n=============COMPUTER BOARD=============\n"
+    puts computer_board.render
+    puts "\n==============PLAYER BOARD==============\n"
+    puts user_board.render(true)
+        
+    input = request_user_coordinate
+    
+    until computer_board.valid_coordinate?(input)
+      puts "Oops that is not a valid coordinate. Try again."
+      input = request_user_coordinate
+    end
+
+    computer_board.cells[input].fire_upon
+    computer_cell = computer_board.cells[input]
+    user_cell = computer_shot
+    find_results(user_cell, computer_cell)
+    game_over?
+  end
+
+  def request_user_coordinate
+    puts "\nEnter the coordinate for your shot:\n"
+    gets.chomp.upcase
+  end
+
+  def computer_shot
+     random_coord = user_board.cells.keys.sample
+    unless user_board.cells[random_coord].fired_upon? 
+      user_board.cells[random_coord].fire_upon
+      user_board.cells[random_coord]
+    end
+  end
+
+  def find_results(user_cell, computer_cell)
+    require 'pry'; binding.pry
+    if computer_cell.render == "H"
+      puts "Your shot on #{computer_cell.coordinate} was a hit!"
+    elsif 
+       computer_cell.render == "M"
+       puts "Your shot on #{computer_cell.coordinate} was a hit!"
+    end
+
+  end
+  # puts "\n=============COMPUTER BOARD=============\n"
+  # puts computer_board.render 
 end
