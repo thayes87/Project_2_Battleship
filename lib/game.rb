@@ -110,13 +110,14 @@ class Game
   end
 
   def find_results(user_cell, computer_cell)
-    require 'pry'; binding.pry
     if computer_cell.render == "H"
       puts "Your shot on #{computer_cell.coordinate} was a hit!"
-    elsif 
-       computer_cell.render == "M"
-       puts "Your shot on #{computer_cell.coordinate} was a hit!"
+    elsif computer_cell.render == "M"
+       puts "Your shot on #{computer_cell.coordinate} was a miss!"
     end
+  end
+
+  def game_over?
 
   end
   # puts "\n=============COMPUTER BOARD=============\n"
