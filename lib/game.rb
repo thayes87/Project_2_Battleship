@@ -80,7 +80,14 @@ class Game
     puts computer_board.render
     puts "\n==============PLAYER BOARD==============\n"
     puts user_board.render(true)
-        
+
+    computer_cell = player_shot
+    user_cell = computer_shot
+    find_results(user_cell, computer_cell)
+    take_turn unless game_over?
+  end
+
+  def player_shot
     input = ""
     loop do
       input = request_user_coordinate
@@ -93,15 +100,8 @@ class Game
       end
     end
 
-    # if computer_board.cells[input].fired_upon?
-    computer_board.cells[input].fire_upon 
-    # else input = request_user_coordinate
-    # end
-
-    computer_cell = computer_board.cells[input]
-    user_cell = computer_shot
-    find_results(user_cell, computer_cell)
-    take_turn unless game_over?
+    computer_board.cells[input].fire_upon
+    computer_board.cells[input]
   end
 
   def request_user_coordinate
